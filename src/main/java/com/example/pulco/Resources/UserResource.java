@@ -34,6 +34,7 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
+    @JWTNeeded
     public Response getUser(@PathParam("id") Integer id){
         if(id == null || id <= 0){
             return Response.status(403).build();
@@ -49,6 +50,7 @@ public class UserResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @JWTNeeded
     public Response addUser(User user){
 
         if(user.getPassword() == null | user.getEmail() == null){
@@ -65,6 +67,7 @@ public class UserResource {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @JWTNeeded
     public Response updateUser(User user){
         if (user.getId() == 0){
             return Response.status(403).build();
