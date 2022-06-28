@@ -66,6 +66,8 @@ public class UserRepository {
     private boolean checkPassword(User user, String password){
         return user.getPassword().equals(hash(password, getSalt(user)));
     }
+
+
     private String hash(String password, String salt){
         try {
             MessageDigest md = MessageDigest.getInstance(HASH_ALGO);
@@ -86,6 +88,7 @@ public class UserRepository {
         }
     }
 
+    
     public Credentials authenticate(Credentials credentials){
 
         List<User> userList = userDAO.findByEmail(credentials.getEmail());
