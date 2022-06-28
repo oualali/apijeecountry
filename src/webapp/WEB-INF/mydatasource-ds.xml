@@ -1,0 +1,10 @@
+<datasources xmlns="http://www.jboss.org/ironjacamar/schema">
+    <datasource jndi-name="java:jboss/datasources/PulcoDS" pool-name="PulcoDS">
+        <driver>embedded-mysql.war_com.mysql.cj.jdbc.Driver_8_0</driver>
+        <connection-url>jdbc:postgres://ec2-54-165-90-230.compute-1.amazonaws.com/d3ladsgeflq02f?useSSL=false&amp;serverTimezone=UTC</connection-url>
+        <security>
+            <user-name>xfzreilzxqviuo</user-name>
+            <password>41cb272cd0e2e1aca726dee485678f8106ddbefdb2aa91b018f26e0c3f388a54</password>
+        </security>
+    </datasource>
+</datasources>
