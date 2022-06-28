@@ -1,32 +1,26 @@
 package com.example.pulco.Utils;
 
-import com.example.pulco.Repository.JWTRepositry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
-import java.util.Date;
-import java.util.UUID;
 
 public class JWT {
 
-    private static final String SECRET_KEY = "Flemme de se casser la tete avec les variables d environnement";
+    private static final String SECRET_KEY = "super secret";
     private static final String HEADER = "{\"alg\":\"HS256\",\"typ\":\"JWT\"}";
     private JSONObject payload = new JSONObject();
     private String signature;
     private String encodedHeader;
 
-    private JWTRepositry jwtRepositry = new JWTRepositry();
     private JWT() {
         encodedHeader = encode(new JSONObject(HEADER));
     }
@@ -61,9 +55,11 @@ public class JWT {
         }
         signature = parts[2];
     }
+
     private static String encode(byte[] bytes) {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
+
     private static String encode(JSONObject obj) {
         return encode(obj.toString().getBytes(StandardCharsets.UTF_8));
     }
@@ -75,8 +71,8 @@ public class JWT {
     private String hmacSha256(String data, String secret) {
         try {
 
-            //MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = secret.getBytes(StandardCharsets.UTF_8);//digest.digest(secret.getBytes(StandardCharsets.UTF_8));
+            // MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = secret.getBytes(StandardCharsets.UTF_8);// digest.digest(secret.getBytes(StandardCharsets.UTF_8));
 
             Mac sha256Hmac = Mac.getInstance("HmacSHA256");
             SecretKeySpec secretKey = new SecretKeySpec(hash, "HmacSHA256");
@@ -95,9 +91,8 @@ public class JWT {
     }
 
     public boolean isValid() {
-        return payload.getLong("exp") > (LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) //token not expired
-                && signature.equals(hmacSha256(encodedHeader + "." + encode(payload), SECRET_KEY))
-                && !jwtRepositry.exist(this.toString()); //signature matched;
+        return payload.getLong("exp") > (LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) // token not expired
+                && signature.equals(hmacSha256(encodedHeader + "." + encode(payload), SECRET_KEY));// signature matched
     }
 
     public String getEmail() {
@@ -106,5 +101,13 @@ public class JWT {
 
     public String getId() {
         return payload.getString("id");
+    }
+
+    public LocalDateTime getExpAsLocalDateTime() {
+        return LocalDateTime.ofEpochSecond(getExp(), 0, ZoneOffset.UTC);
+    }
+
+    public Long getExp() {
+        return payload.getLong("exp");
     }
 }

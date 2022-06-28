@@ -18,7 +18,6 @@ public class JWTRepositry {
     private JWTDAO jwtDAO;
 
     public boolean exist(String token){
-        System.out.println("looking for the token in the black list");
         return jwtDAO.findToken(token) != null ;
     }
 

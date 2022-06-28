@@ -1,5 +1,6 @@
 package com.example.pulco.Resources;
 
+import com.example.pulco.Filters.JWTNeeded;
 import com.example.pulco.Repository.AssessmentRepository;
 import com.example.pulco.Model.Assessment;
 
@@ -16,6 +17,7 @@ public class AssessmentResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @JWTNeeded
     public Response getAssessments(){
         return Response.ok(assessmentRepository.findAll()).build();
     }
@@ -23,6 +25,7 @@ public class AssessmentResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
+    @JWTNeeded
     public Response getAssessment(@PathParam("id") Integer id){
         if(id == null || id <= 0){
             return Response.status(403).build();
@@ -38,6 +41,7 @@ public class AssessmentResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @JWTNeeded
     public Response addAssessment(Assessment assessment){
         if(assessment.getName() == null || assessment.getType() == null){
             return Response.status(403).build();
@@ -53,6 +57,7 @@ public class AssessmentResource {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @JWTNeeded
     public Response updateAssessment(Assessment assessment){
 
         if(assessment.getId() == 0){
@@ -68,6 +73,7 @@ public class AssessmentResource {
 
     @DELETE
     @Path("/{id}")
+    @JWTNeeded
     public Response deleteAssessment(@PathParam("id") Integer id){
         if(id == null || id <= 0){
             return Response.status(403).build();
