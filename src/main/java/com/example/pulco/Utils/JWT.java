@@ -1,22 +1,18 @@
 package com.example.pulco.Utils;
 
-import com.example.pulco.Repository.JWTRepositry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
-import java.util.Date;
-import java.util.UUID;
+
 
 public class JWT {
 
@@ -26,7 +22,6 @@ public class JWT {
     private String signature;
     private String encodedHeader;
 
-    private JWTRepositry jwtRepositry = new JWTRepositry();
     private JWT() {
         encodedHeader = encode(new JSONObject(HEADER));
     }
@@ -96,8 +91,7 @@ public class JWT {
 
     public boolean isValid() {
         return payload.getLong("exp") > (LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) //token not expired
-                && signature.equals(hmacSha256(encodedHeader + "." + encode(payload), SECRET_KEY))
-                && !jwtRepositry.exist(this.toString()); //signature matched;
+                && signature.equals(hmacSha256(encodedHeader + "." + encode(payload), SECRET_KEY));//signature matched
     }
 
     public String getEmail() {
@@ -107,4 +101,8 @@ public class JWT {
     public String getId() {
         return payload.getString("id");
     }
+
+    public LocalDateTime getExpAsLocalDateTime(){ return LocalDateTime.ofEpochSecond(getExp(), 0, ZoneOffset.UTC); }
+
+    public Long getExp() { return payload.getLong("exp");}
 }

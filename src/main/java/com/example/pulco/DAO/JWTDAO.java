@@ -4,6 +4,8 @@ import com.example.pulco.Model.TokenBlackList;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.transaction.UserTransaction;
 import java.time.LocalDateTime;
@@ -11,11 +13,16 @@ import java.util.List;
 
 public class JWTDAO {
 
+
     @PersistenceContext
     private EntityManager entityManager;
 
     @Resource()
     UserTransaction userTransaction;
+
+    public JWTDAO() {
+        entityManager = Persistence.createEntityManagerFactory("prod").createEntityManager();
+    }
 
     public TokenBlackList findToken(String token){
         List<TokenBlackList> tokenList = entityManager

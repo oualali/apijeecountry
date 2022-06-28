@@ -1,8 +1,10 @@
 package com.example.pulco.Filters;
 
+import com.example.pulco.Repository.JWTRepositry;
 import com.example.pulco.Utils.JWT;
 
 import javax.annotation.Priority;
+import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -16,6 +18,10 @@ import java.io.IOException;
 @Priority(Priorities.AUTHORIZATION)
 @JWTNeeded
 public class JWTokenNeededFilter implements ContainerRequestFilter {
+
+    @Inject
+    JWTRepositry jwtRepositry;
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
@@ -28,15 +34,12 @@ public class JWTokenNeededFilter implements ContainerRequestFilter {
             String token = authorizationHeader.substring("Bearer".length()).trim();
 
             JWT tokenObject = new JWT(token);
-            System.out.println("Filter works token is : " + tokenObject.toString());
-            if (!tokenObject.isValid()){
-                System.out.println("Validation Failed !!");
-                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+
+            if (!tokenObject.isValid() || jwtRepositry.exist(token)){
+                throw new NotAuthorizedException("Authorization header is not valid");
             }
-            System.out.println("Validation approved, you can continue");
+
         }catch (Exception e){
-            System.out.println("something went worng");
-            System.out.println(e);
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }
     }

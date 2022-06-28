@@ -23,6 +23,7 @@ public class UserResource {
     @Inject
     private UserRepository userRepository;
 
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @JWTNeeded
@@ -74,31 +75,5 @@ public class UserResource {
         }
 
         return Response.status(406).build();
-    }
-
-    @POST
-    @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response login(Credentials credentials){
-
-        credentials = userRepository.authenticate(credentials);
-
-        if (credentials.isValid()){
-            JWT token = new JWT(credentials.getEmail(), credentials.getUserId());
-            return Response.ok().header(AUTHORIZATION, "Bearer " + token).build();
-        }
-
-        return Response.status(Response.Status.UNAUTHORIZED).entity(credentials).build();
-    }
-
-    @GET
-    @Path("/logout")
-    @JWTNeeded
-    public Response logout(@Context HttpServletRequest req){
-
-        System.out.println(req.getHeader(AUTHORIZATION));
-
-        return Response.ok().build();
     }
 }
