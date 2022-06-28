@@ -17,46 +17,47 @@ public class AssessmentDAO {
     @Resource()
     UserTransaction userTransaction;
 
-    public List<Assessment> getAssessments(){
+    public List<Assessment> getAssessments() {
         return entityManager.createNativeQuery("select * from assessments", Assessment.class).getResultList();
     }
 
-    public Assessment getAssessment(Integer id){
+    public Assessment getAssessment(Integer id) {
         return entityManager.find(Assessment.class, id);
     }
 
-    public boolean addAssessment(Assessment assessment){
+    public boolean addAssessment(Assessment assessment) {
         try {
             userTransaction.begin();
             entityManager.persist(assessment);
             userTransaction.commit();
 
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, "DAO ERROR :" + e.getMessage());
             return false;
         }
     }
 
-    public boolean updateAssessment(Assessment assessment){
+    public boolean updateAssessment(Assessment assessment) {
         try {
             userTransaction.begin();
             entityManager.merge(assessment);
             userTransaction.commit();
 
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, "DAO ERROR :" + e.getMessage());
             return false;
         }
     }
-    public boolean deleteAssessment(int id){
+
+    public boolean deleteAssessment(int id) {
         try {
             userTransaction.begin();
             entityManager.remove(entityManager.find(Assessment.class, id));
             userTransaction.commit();
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, "DAO ERROR :" + e.getMessage());
             return false;
         }
